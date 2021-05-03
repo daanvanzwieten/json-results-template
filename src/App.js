@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import data from "./data.json";
+import SearchResultsView from "./Components/SearchResultsView";
 
 function App() {
+  const [results, setResults] = useState([]);
+
+  useEffect(() => {
+    setResults(data.results.docs);
+  }, []);
+
+  const sortResults = (e) => {
+    const [property, direction] = e.target.value.split(',');
+    const resultsCopy = [...results];
+
+    const sorted = resultsCopy.sort((a, b) => {
+      if (direction === 'asc') {
+        return a[property] - b[property];
+      }
+
+      return b[property] - a[property];
+    });
+
+    setResults(sorted);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <SearchResultsView results={results} sortResults={sortResults} />
   );
 }
 
